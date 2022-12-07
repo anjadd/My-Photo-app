@@ -5,6 +5,11 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 
 private val DarkColorPalette = darkColors(
     primary = Purple200,
@@ -27,6 +32,21 @@ private val LightColorPalette = lightColors(
     */
 )
 
+@Immutable
+data class CustomDimensions(
+    val paddingDefault: Dp,
+    val paddingMedium: Dp,
+    val paddingSmall: Dp,
+)
+
+val LocalCustomDimensions = staticCompositionLocalOf {
+    CustomDimensions(
+        paddingDefault = Dp.Unspecified,
+        paddingMedium = Dp.Unspecified,
+        paddingSmall = Dp.Unspecified,
+    )
+}
+
 @Composable
 fun MyPhotoAppTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit) {
     val colors = if (darkTheme) {
@@ -35,10 +55,26 @@ fun MyPhotoAppTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Compos
         LightColorPalette
     }
 
-    MaterialTheme(
-        colors = colors,
-        typography = Typography,
-        shapes = Shapes,
-        content = content
+    val customDimensions = CustomDimensions(
+        paddingDefault = 16.dp,
+        paddingMedium = 12.dp,
+        paddingSmall = 8.dp
     )
+
+    CompositionLocalProvider(
+        LocalCustomDimensions provides customDimensions
+    ) {
+        MaterialTheme(
+            colors = colors,
+            typography = Typography,
+            shapes = Shapes,
+            content = content
+        )
+    }
+}
+
+object MyPhotoAppTheme {
+    val dimensions: CustomDimensions
+        @Composable
+        get() = LocalCustomDimensions.current
 }
