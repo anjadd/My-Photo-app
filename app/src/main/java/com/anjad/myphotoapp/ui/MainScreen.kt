@@ -17,11 +17,13 @@ import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Devices
@@ -37,8 +39,8 @@ fun MainScreen(modifier: Modifier = Modifier, imageList: List<FlickrImage>) {
     LazyColumn(
         modifier = modifier
             .fillMaxSize()
-            .padding(dimensionResource(id = R.dimen.padding_default)),
-        verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding_small)),
+            .padding(MyPhotoAppTheme.dimensions.paddingDefault),
+        verticalArrangement = Arrangement.spacedBy(MyPhotoAppTheme.dimensions.paddingSmall),
     ) {
         items(imageList) { item ->
             PhotoCard(item = item)
@@ -52,7 +54,9 @@ fun PhotoCard(
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
-    val thumbnailId = context.resources.getIdentifier(item.thumbnailImage, "drawable", context.packageName)
+    val thumbnailId by rememberSaveable {
+        mutableStateOf(context.resources.getIdentifier(item.thumbnailImage, "drawable", context.packageName))
+    }
 
     Card(
         elevation = 10.dp,
@@ -61,7 +65,7 @@ fun PhotoCard(
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding_small))
+            horizontalArrangement = Arrangement.spacedBy(MyPhotoAppTheme.dimensions.paddingSmall)
         ) {
             Image(
                 painter = painterResource(id = thumbnailId),
