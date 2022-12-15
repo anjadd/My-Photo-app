@@ -1,6 +1,5 @@
 package com.anjad.myphotoapp.ui
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,9 +16,6 @@ import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -29,6 +25,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.anjad.myphotoapp.R
 import com.anjad.myphotoapp.model.FlickrImage
 import com.anjad.myphotoapp.ui.theme.MyPhotoAppTheme
@@ -54,9 +52,6 @@ fun PhotoCard(
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
-    val thumbnailId by rememberSaveable {
-        mutableStateOf(context.resources.getIdentifier(item.thumbnailImage, "drawable", context.packageName))
-    }
 
     Card(
         elevation = 10.dp,
@@ -67,12 +62,17 @@ fun PhotoCard(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(MyPhotoAppTheme.dimensions.paddingSmall)
         ) {
-            Image(
-                painter = painterResource(id = thumbnailId),
+            val imageData = item.link
+            val imageRequest = ImageRequest.Builder(context)
+                .data(imageData)
+                .crossfade(false)
+                .build()
+            AsyncImage(
+                model = imageRequest,
                 contentDescription = stringResource(id = R.string.flickr_image),
                 contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .size(180.dp)
+                modifier = Modifier.size(180.dp),
+                placeholder = painterResource(id = R.drawable.ic_empty_image_placeholder),
             )
             Column {
                 Text(text = item.title, style = MaterialTheme.typography.h6)
@@ -116,7 +116,7 @@ fun ErrorState(
 @Composable
 fun MainScreenPreview() {
     MyPhotoAppTheme {
-        MainScreen(modifier = Modifier, imageList = generateMockImageList(),)
+        MainScreen(modifier = Modifier, imageList = generateMockImageList())
     }
 }
 
@@ -132,6 +132,6 @@ fun LoadingStatePreview() {
 @Composable
 fun ErrorStatePreview() {
     MyPhotoAppTheme {
-        ErrorState(errorMessage = null, {},)
+        ErrorState(errorMessage = null, onRetryClick = {})
     }
 }
