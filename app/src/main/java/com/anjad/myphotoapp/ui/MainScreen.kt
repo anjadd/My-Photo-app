@@ -72,7 +72,8 @@ fun PhotoCard(
                 contentDescription = stringResource(id = R.string.flickr_image),
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.size(180.dp),
-                placeholder = painterResource(id = R.drawable.ic_empty_image_placeholder),
+                placeholder = painterResource(id = R.drawable.ic_loading),
+                error = painterResource(R.drawable.ic_empty_image_placeholder),
             )
             Column {
                 Text(text = item.title, style = MaterialTheme.typography.h6)
