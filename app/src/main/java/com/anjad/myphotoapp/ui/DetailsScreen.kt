@@ -14,9 +14,11 @@ fun DetailsScreen(imageTitle: String?, modifier: Modifier = Modifier) {
         contentAlignment = Alignment.Center,
         modifier = modifier.fillMaxSize(),
     ) {
-        Text(
-            text = imageTitle ?: "Title",
-            fontSize = 30.sp,
-        )
+        imageTitle?.let {
+            Text(
+                text = imageTitle,
+                fontSize = 30.sp,
+            )
+        }
     }
 }

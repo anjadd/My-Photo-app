@@ -7,10 +7,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavType
@@ -29,19 +25,24 @@ class MainActivity : ComponentActivity() {
         setContent {
             MyPhotoAppTheme {
                 val navController = rememberNavController()
-                var selectedImage by remember {
-                    mutableStateOf(generateMockImageList()[0])
-                }
                 // A surface container using the 'background' color from the theme
-                Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
-                    NavHost(navController = navController, startDestination = NavRoutes.MainScreen.route) {
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colors.background,
+                ) {
+                    NavHost(
+                        navController = navController,
+                        startDestination = NavRoutes.MainScreen.route,
+                    ) {
 
                         composable(NavRoutes.MainScreen.route) {
-                            MainScreen(modifier = Modifier, imageList = generateMockImageList(), onImageClick =
-                            { imageClicked ->
-                                selectedImage = imageClicked
-                                navController.navigate(NavRoutes.DetailsScreen.withArgs(imageClicked.title))
-                            })
+                            MainScreen(
+                                modifier = Modifier,
+                                imageList = generateMockImageList(),
+                                onImageClick = { imageClicked ->
+                                    navController.navigate(NavRoutes.DetailsScreen.withArgs(imageClicked.title))
+                                },
+                            )
                         }
 
                         composable(
@@ -49,7 +50,6 @@ class MainActivity : ComponentActivity() {
                             arguments = listOf(
                                 navArgument("imageTitle") {
                                     type = NavType.StringType
-                                    this.defaultValue = "Some image"
                                     nullable = true
                                 }
                             )
