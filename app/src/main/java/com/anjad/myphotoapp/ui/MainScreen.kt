@@ -1,5 +1,6 @@
 package com.anjad.myphotoapp.ui
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -33,7 +34,11 @@ import com.anjad.myphotoapp.ui.theme.MyPhotoAppTheme
 import com.anjad.myphotoapp.utils.generateMockImageList
 
 @Composable
-fun MainScreen(modifier: Modifier = Modifier, imageList: List<FlickrImage>) {
+fun MainScreen(
+    modifier: Modifier = Modifier,
+    imageList: List<FlickrImage>,
+    onImageClick: (FlickrImage) -> Unit,
+) {
     LazyColumn(
         modifier = modifier
             .fillMaxSize()
@@ -41,7 +46,10 @@ fun MainScreen(modifier: Modifier = Modifier, imageList: List<FlickrImage>) {
         verticalArrangement = Arrangement.spacedBy(MyPhotoAppTheme.dimensions.paddingSmall),
     ) {
         items(imageList) { item ->
-            PhotoCard(item = item)
+            PhotoCard(
+                item = item,
+                onImageClick = onImageClick,
+            )
         }
     }
 }
@@ -49,14 +57,19 @@ fun MainScreen(modifier: Modifier = Modifier, imageList: List<FlickrImage>) {
 @Composable
 fun PhotoCard(
     item: FlickrImage,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onImageClick: (FlickrImage) -> Unit,
 ) {
     val context = LocalContext.current
 
     Card(
         elevation = 10.dp,
         shape = MaterialTheme.shapes.medium,
-        modifier = modifier.fillMaxWidth()
+        modifier = modifier
+            .fillMaxWidth()
+            .clickable {
+                onImageClick(item)
+            }
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -117,7 +130,7 @@ fun ErrorState(
 @Composable
 fun MainScreenPreview() {
     MyPhotoAppTheme {
-        MainScreen(modifier = Modifier, imageList = generateMockImageList())
+        MainScreen(modifier = Modifier, imageList = generateMockImageList(), onImageClick = {})
     }
 }
 
