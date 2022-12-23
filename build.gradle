@@ -1,8 +1,9 @@
 buildscript {
     ext {
-        compose_ui_version = '1.1.1'
+        uiCompose = '1.1.1'
         desugarJdk = '1.1.8'
         coilCompose = '2.2.2'
+        navigationCompose = '2.5.0'
     }
 }// Top-level build file where you can add configuration options common to all sub-projects/modules.
 plugins {
